@@ -5,6 +5,7 @@ import faiss
 import numpy as np
 import requests
 import re
+from pandas import DataFrame
 
 def main():
     # Load the .env file
@@ -42,6 +43,10 @@ def main():
     print(f"Relevant documents: \n")
     for doc in documents:
         print(f"{doc}")
+
+    docs = DataFrame(documents)
+    docs["id"]=docs.index
+    
     print(f"Relevant documents stored")
     print(f"------------------------------------------------------------------------------\n")
 
@@ -50,7 +55,8 @@ def main():
     embeddings = get_embeddings(documents, client)
     # Initialize FAISS index
     dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
+    index = faiss.IndexFlatL2(dimension) # Vector Search: Exact Search for L2 (brute force)
+    # Choose other FAISS Indexes algorithms: https://github.com/facebookresearch/faiss/wiki/Faiss-indexes
     # Add embeddings to the index
     index.add(embeddings)
     print(embeddings)
